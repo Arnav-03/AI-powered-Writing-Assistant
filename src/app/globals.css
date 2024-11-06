@@ -65,3 +65,7 @@ body {
 .flip-horizontal {
   transform: scaleX(-1);
 }
+
+::-webkit-scrollbar{
+  width: 0px;
+}

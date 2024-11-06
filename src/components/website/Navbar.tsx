@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 w-full  border-b-[1px] border-gray-200 backdrop-blur-md shadow-md z-50">
+    <nav className="fixed top-0 left-0 w-full  border-b-[2px] border-primary backdrop-blur-md shadow-md z-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
@@ -56,7 +56,7 @@ const Navbar: React.FC = () => {
           <Button className="mx-2">Get Started</Button>
           <ModeToggle />
           {/* Mobile Menu Toggler */}
-          <div className="md:hidden">
+          <div className="md:hidden ml-2">
             <Button
               size='icon'
               className="text-primary-foreground "

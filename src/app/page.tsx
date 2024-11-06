@@ -28,7 +28,7 @@ export default function HomePage() {
                   <span className="text-primary  font-extrabold">
                     Essays
                   </span>{" "}
-                  and <span className="text-primary">Blogs</span>
+                  and <span className="text-primary font-extrabold">Blogs</span>
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 text-lg md:text-xl dark:text-gray-400  text-start md:text-center">
                   Speed up your writing process with AI-powered tools that
