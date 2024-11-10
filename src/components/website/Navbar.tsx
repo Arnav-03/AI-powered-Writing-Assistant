@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <div className="text-2xl font-bold flex items-center gap-2 hover:text-primary/80 transition-colors text-primary">
+          <div onClick={()=>router.push('/')} className=" cursor-pointer text-2xl font-bold flex items-center gap-2 hover:text-primary/80 transition-colors text-primary">
             <WandSparkles /> WritinGenie
           </div>
 

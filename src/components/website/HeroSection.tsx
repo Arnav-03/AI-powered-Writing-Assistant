@@ -41,7 +41,7 @@ export default function HeroSection() {
             <div className="dark:shine-effect"></div>
             <Image
               priority
-              height={350}
+              height={400}
               src={genie}
               alt="genie"
               className="floating genie-image"
