@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function HeroSection() {
   return (
-        <section className="w-full py-12 md:py-16 lg:py-16 xl:py-4  md:mt-10">
+        <section className="w-full py-12 md:py-16 lg:py-16  mt-16">
           <div className="container px-4 md:px-6 flex md:flex-row items-center justify-center">
             <div className="flex flex-col items-center space-y-4 text-center w-2/3">
               <div className="space-y-2 lg:w-4/5 tracking-wide">
@@ -32,7 +32,7 @@ export default function HeroSection() {
             </div>
             <div className="flex items-center justify-center gap-4">
               <div className="genie-wrapper p-4">
-                <div className="shine-effect"></div>
+                <div className="dark:shine-effect"></div>
                 <Image
                   height={350}
                   src={genie}

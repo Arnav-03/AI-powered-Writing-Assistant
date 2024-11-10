@@ -1,10 +1,11 @@
-import HeroSection from '@/components/website/HeroSection'
+import HeroSection from "@/components/website/HeroSection";
+import Layout from "@/components/website/Layout";
 export default function HomePage() {
   return (
-    <div className="flex flex-col  ">
-      <main className="flex-1 mt-16 ">
-       <HeroSection/>
-      </main>
-    </div>
+    <Layout>
+      <div className="flex flex-col">
+          <HeroSection />
+      </div>
+    </Layout>
   );
 }
