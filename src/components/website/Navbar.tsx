@@ -14,13 +14,15 @@ import {
   BadgeIndianRupee,
   Menu,
   X,
+  Router,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { ModeToggle } from "../ToggleSwitch";
+import { useRouter } from "next/navigation";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const router=useRouter();
   const navItems = [
     { href: "/", label: "Home", icon: <Home size={20} /> },
     { href: "/about", label: "About", icon: <User size={20} /> },
@@ -53,7 +55,7 @@ const Navbar: React.FC = () => {
               </Link>
             ))}
           </div>
-          <Button className="mx-2">Get Started</Button>
+          <Button onClick={()=>router.push('/signup')} className="mx-2">Get Started</Button>
           <ModeToggle />
           {/* Mobile Menu Toggler */}
           <div className="md:hidden ml-2">

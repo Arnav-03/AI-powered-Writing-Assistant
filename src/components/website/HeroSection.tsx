@@ -1,8 +1,11 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import genie from "../../../public/genie5.png";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
+  const router=useRouter();
   return (
         <section className="w-full py-12 md:py-16 lg:py-16  mt-16">
           <div className="container px-4 md:px-6 flex md:flex-row items-center justify-center">
@@ -25,7 +28,7 @@ export default function HeroSection() {
                   refine, edit, and enhance your work.
                 </p>
                 <div className="md:flex gap-4 w-full items-center justify-center mt-6 hidden">
-                  <Button size="lg">Get Started</Button>
+                  <Button  onClick={()=>router.push('/signup')} size="lg">Get Started</Button>
                   <Button size="lg" variant="outline">Learn More</Button>
                 </div>
               </div>
@@ -47,7 +50,7 @@ export default function HeroSection() {
             </div>
           </div>
           <div className="flex gap-4 w-full items-center justify-center mt-10 md:hidden">
-            <Button size="lg">Get Started</Button>
+            <Button onClick={()=>router.push('/signup')} size="lg">Get Started</Button>
             <Button size="lg" variant="outline">Learn More</Button>
           </div>
         </section>
