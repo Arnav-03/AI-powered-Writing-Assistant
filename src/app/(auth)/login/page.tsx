@@ -1,41 +1,49 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { LogIn, Briefcase, GraduationCap, Building2 } from 'lucide-react';
-import Layout from '@/components/website/Layout';
-import Link from 'next/link';
-import { toast } from 'sonner';
+"use client";
+import React, { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { LogIn, Briefcase, GraduationCap, Building2 } from "lucide-react";
+import Layout from "@/components/website/Layout";
+import Link from "next/link";
+import { toast } from "sonner";
 /* import { getLoggedInUser, loginWithEmail } from '@/lib/appwrite';
- */import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+ */ import { useRouter } from "next/navigation";
+import Image from "next/image";
 import genie from "../../../../public/auth.png";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    role: '',
+    email: "",
+    password: "",
+    role: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement> | { target: { name: string; value: string } }
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | { target: { name: string; value: string } }
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    setError('');
+    setError("");
   };
 
-/* 
+  /* 
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -50,7 +58,7 @@ export default function LoginPage() {
 
     checkUser();
   }, [router]); */
-/* 
+  /* 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -83,15 +91,18 @@ export default function LoginPage() {
   return (
     <Layout>
       <div className="flex flex-col lg:flex-row mt-[150px]  ">
-      <div className="flex w-full  mb-4  items-center justify-center p-4 ">
+        <div className="flex w-full  mb-4  items-center justify-center p-4 ">
           <Image
+            priority
             height={300}
             src={genie}
             alt="genie"
             className="floating genie-image h-[200px] lg:h-[300px] w-auto"
           />
-            <div className="flex items-center justify-center p-2 notefont text-3xl   lg:text-3xl xl:text-4xl text-yellow-600">
-            &quot; Ah, the master of <br /> words returns!  Log in to <br /> unleash the genie&apos;s magic <br /> and let your creativity <br /> soar! &quot;
+          <div className="flex items-center justify-center p-2 notefont text-3xl   lg:text-3xl xl:text-4xl text-yellow-600">
+            &quot; Ah, the master of <br /> words returns! Log in to <br />{" "}
+            unleash the genie&apos;s magic <br /> and let your creativity <br />{" "}
+            soar! &quot;
           </div>
         </div>
         <div className="flex flex-col w-full mt-[-50px] p-4 items-center justify-center">
@@ -144,11 +155,8 @@ export default function LoginPage() {
                 </Button>
 
                 <div className="text-center text-sm text-muted-foreground">
-                  Don&apos;t have an account?{' '}
-                  <Link
-                    href="/signup"
-                    className="text-primary hover:underline"
-                  >
+                  Don&apos;t have an account?{" "}
+                  <Link href="/signup" className="text-primary hover:underline">
                     Sign up
                   </Link>
                 </div>

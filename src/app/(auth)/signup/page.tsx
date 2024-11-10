@@ -40,8 +40,8 @@ export default function SignupForm() {
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-    /*  e.preventDefault();
-
+    e.preventDefault();
+    /*
     try {
       const result = await signUpWithEmail(formData);
 
@@ -61,16 +61,20 @@ export default function SignupForm() {
 
   return (
     <Layout>
-  <div className="flex flex-col lg:flex-row mt-[150px]  ">      <div className="flex w-full  mb-4  items-center justify-center p-4 ">
+      <div className="flex flex-col lg:flex-row mt-[150px]  ">
+        {" "}
+        <div className="flex w-full  mb-4  items-center justify-center p-4 ">
           <Image
+            priority
             height={300}
             src={genie}
             alt="genie"
             className="floating genie-image h-[200px] lg:h-[300px] w-auto"
           />
-            <div className="flex items-center justify-center p-2 notefont text-3xl   lg:text-3xl xl:text-4xl text-yellow-600">
-            &quot; Welcome, wordsmith! <br /> Sign up to summon <br /> the genie 
-            and unlock  endless<br /> writing inspiration! &quot;
+          <div className="flex items-center justify-center p-2 notefont text-3xl   lg:text-3xl xl:text-4xl text-yellow-600">
+            &quot; Welcome, wordsmith! <br /> Sign up to summon <br /> the genie
+            and unlock endless
+            <br /> writing inspiration! &quot;
           </div>
         </div>
         <div className="flex flex-col w-full mt-[-50px] p-4 items-center justify-center">
@@ -81,7 +85,7 @@ export default function SignupForm() {
                 Sign Up
               </CardTitle>
               <CardDescription>
-              Create your account to get started
+                Create your account to get started
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -128,10 +132,7 @@ export default function SignupForm() {
 
                 <div className="text-center text-sm text-muted-foreground">
                   Already have an account?
-                  <Link
-                    href="/login"
-                    className="text-primary hover:underline"
-                  >
+                  <Link href="/login" className="text-primary hover:underline">
                     Login
                   </Link>
                 </div>
