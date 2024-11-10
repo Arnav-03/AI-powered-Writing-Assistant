@@ -97,9 +97,9 @@ export default function LoginPage() {
             height={300}
             src={genie}
             alt="genie"
-            className="floating genie-image h-[200px] lg:h-[300px] w-auto"
-          />
-          <div className="flex items-center justify-center p-2 notefont text-3xl   lg:text-3xl xl:text-4xl text-yellow-600">
+            className="floating genie-image h-[175px] lg:h-[300px] w-auto"
+            />
+            <div className="flex items-center justify-center p-2 notefont text-2xl    lg:text-3xl xl:text-4xl text-yellow-600">
             &quot; Ah, the master of <br /> words returns! Log in to <br />{" "}
             unleash the genie&apos;s magic <br /> and let your creativity <br />{" "}
             soar! &quot;
