@@ -61,15 +61,14 @@ export default function SignupForm() {
 
   return (
     <Layout>
-      <div className="flex mt-[150px]  ">
-        <div className="hidden lg:flex w-full ml-10  items-center justify-center ">
+  <div className="flex flex-col lg:flex-row mt-[150px]  ">      <div className="flex w-full  mb-4  items-center justify-center p-4 ">
           <Image
             height={300}
             src={genie}
             alt="genie"
-            className="floating genie-image"
+            className="floating genie-image h-[200px] lg:h-[300px] w-auto"
           />
-          <div className="flex items-center justify-center p-2 notefont lg:text-3xl xl:text-4xl text-yellow-600">
+            <div className="flex items-center justify-center p-2 notefont text-3xl   lg:text-3xl xl:text-4xl text-yellow-600">
             &quot; Welcome, wordsmith! <br /> Sign up to summon <br /> the genie 
             and unlock  endless<br /> writing inspiration! &quot;
           </div>
