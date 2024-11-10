@@ -10,6 +10,7 @@ import {
 import { BookOpen, Edit, Sparkles, Users } from "lucide-react";
 import genie from "../../public/genie.png";
 import Image from "next/image";
+
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -25,34 +26,40 @@ export default function HomePage() {
                   <span className="md:hidden"><br /></span>
                   for Crafting <br />
                   Perfect{" "}
-                  <span className="text-primary  font-extrabold">
+                  <span className="text-primary font-extrabold">
                     Essays
                   </span>{" "}
                   and <span className="text-primary font-extrabold">Blogs</span>
                 </h1>
-                <p className="mx-auto max-w-[700px] text-gray-500 text-lg md:text-xl dark:text-gray-400  text-start md:text-center">
+                <p className="mx-auto max-w-[700px] text-gray-500 text-lg md:text-xl dark:text-gray-400 text-start md:text-center">
                   Speed up your writing process with AI-powered tools that
                   refine, edit, and enhance your work.
                 </p>
                 <div className="md:flex gap-4 w-full items-center justify-center mt-6 hidden">
-                <Button size='lg'>Get Started</Button>
-                <Button  size='lg' variant="outline">Learn More</Button>
-              </div>
+                  <Button size="lg">Get Started</Button>
+                  <Button size="lg" variant="outline">Learn More</Button>
+                </div>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-4 ">
-              <Image
-                height={350}
-                src={genie}
-                alt="genie"
-                className="flip-horizontal f"
-              ></Image>
+            <div className="flex items-center justify-center gap-4">
+              <div className="genie-wrapper p-4">
+                <div className="shine-effect"></div>
+                <Image
+                  height={350}
+                  src={genie}
+                  alt="genie"
+                  className="floating genie-image"
+                  style={{ 
+                    mixBlendMode: 'overlay'
+                  }}
+                />
+              </div>
             </div>
           </div>
           <div className="flex gap-4 w-full items-center justify-center mt-10 md:hidden">
-                <Button size='lg'>Get Started</Button>
-                <Button  size='lg' variant="outline">Learn More</Button>
-              </div>
+            <Button size="lg">Get Started</Button>
+            <Button size="lg" variant="outline">Learn More</Button>
+          </div>
         </section>
       </main>
     </div>

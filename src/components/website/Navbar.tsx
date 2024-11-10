@@ -68,7 +68,7 @@ const Navbar: React.FC = () => {
 
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className="md:hidden fixed top-0 left-0 w-full  shadow-md z-40  h-screen text-primary bg-primary-foreground  ">
+            <div className="md:hidden fixed top-0 left-0 w-full  shadow-md z-40  h-screen text-primary bg-background  ">
               <div className="flex justify-between border-b-2 border-primary p-4">
                 <div className="text-2xl font-bold flex items-center gap-2 hover:text-primary/80 transition-colors text-primary">
                   <WandSparkles /> WritinGenie
