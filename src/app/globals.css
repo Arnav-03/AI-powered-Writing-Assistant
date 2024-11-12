@@ -16,7 +16,7 @@ body {
 }
 .notefont {
   font-family: "Tangerine", cursive;
-  font-weight: 800;
+  font-weight:800;
   font-style: normal;
 }
 :root  {
@@ -42,7 +42,7 @@ body {
   --radius: 0.5rem;
 }
 .dark  {
-  --background: 224 71.4% 4.1%;
+  --background: 20 14.3% 4.1%;
   --foreground: 183 0% 100%;
   --card: 183 0% 10%;
   --card-foreground: 183 0% 100%;
