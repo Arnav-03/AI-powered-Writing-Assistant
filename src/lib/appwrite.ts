@@ -5,8 +5,8 @@ import { cookies } from 'next/headers';
 
 export async function createSessionClient() {
     const client = new Client()
-        .setEndpoint(process.env.APPWRITE_ENDPOINT!)
-        .setProject(process.env.APPWRITE_PROJECT_ID!);
+        .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
+        .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!);
 
     const session = (await cookies()).get("writingenie");
 
@@ -22,9 +22,9 @@ export async function createSessionClient() {
 }
 export async function createAdminClient() {
     const client = new Client()
-        .setEndpoint(process.env.APPWRITE_ENDPOINT!)
-        .setProject(process.env.APPWRITE_PROJECT_ID!)
-        .setKey(process.env.APPWRITE_KEY!);
+        .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
+        .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!)
+        .setKey(process.env.NEXT_PUBLIC_APPWRITE_KEY!);
 
     return {
         get account() {
@@ -45,47 +45,56 @@ export async function getLoggedInUser() {
     }
 }
 
-export async function signUpWithEmail(values: { name: string; email: string; password: string; role: string }) {
-    const { name, email, password, role } = values;
-
+export async function signUpWithEmail(values: { name: string; email: string; password: string }) {
+    const { name, email, password } = values;
+    console.log(name,email,password);
     const { account } = await createAdminClient();
-    try {
-        // Create a user and send OTP for email verification
-        await account.create(ID.unique(), email, password, name);
-        const otpResponse = await account.createEmailToken(ID.unique(), email);
 
-        return { success: true, otpSent: true, userId: otpResponse.userId, role, redirect: false };
-    } catch (error) {
-        console.error("Sign up failed:", error);
-        return { success: false, error: "Sign up failed. Please try again.", redirect: false };
-    }
+  try {
+    await account.create(ID.unique(), email, password, name);
+    const session = await account.createEmailPasswordSession(email, password);
+    (await cookies()).set("writingenie", session.secret, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Sign up failed:", error);
+    return { success: false, error: "Sign up failed. Please try again." };
+  }
 }
+
 
 export async function loginWithEmail(formData: FormData) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const role = formData.get("role") as string;
-
-    if (!email || !password || !role) {
-        return { success: false, error: "Missing required fields" };
+  
+    if (!email || !password ) {
+      return { success: false, error: "Missing required fields" };
     }
-
+  
     const { account } = await createAdminClient();
-
+  
     try {
-        const session = await account.createEmailPasswordSession(email, password);
-        (await cookies()).set("writingenie", session.secret, {
-            path: "/",
-            httpOnly: true,
-            sameSite: "strict",
-            secure: true,
-        });
-        return { success: true };
+      const session = await account.createEmailPasswordSession(email, password);
+      (await cookies()).set("writingenie", session.secret, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "strict",
+        secure: true,
+      });
+      return { success: true };
     } catch (error) {
-        console.error("Login failed:", error);
-        return { success: false, error: "Invalid email or password" };
+      console.error("Login failed:", error);
+      if (error instanceof Error) {
+        return { success: false, error: error.message };
+      } else {
+        return { success: false, error: "An unknown error occurred while logging in" };
+      }
     }
-}
+  }
 export async function logout() {
     try {
         const { account } = await createSessionClient();

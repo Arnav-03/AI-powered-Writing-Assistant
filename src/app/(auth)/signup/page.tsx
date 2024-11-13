@@ -12,15 +12,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { User, Briefcase, GraduationCap, Building2 } from "lucide-react";
 import genie from "../../../../public/auth.png";
-/* import { signUpWithEmail } from '@/lib/appwrite';
- */ import { toast } from "sonner";
+import { signUpWithEmail } from "@/lib/appwrite";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/website/Layout";
 import Image from "next/image";
 import Link from "next/link";
 import { signUpWithGoogle } from "@/lib/oauth";
+
 export default function SignupForm() {
   const router = useRouter();
+  const [isLoading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -42,22 +44,51 @@ export default function SignupForm() {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    /*
+    setLoading(true);
+
+    // Validate form data
+    if (!formData.name) {
+      toast.error("Name is required");
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.email) {
+      toast.error("Email is required");
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.password) {
+      toast.error("Password is required");
+      setLoading(false);
+      return;
+    }
+    if (formData.password.length < 8) {
+      toast.error("Password must be at least 8 characters long");
+      setLoading(false);
+      return;
+    }
+
     try {
       const result = await signUpWithEmail(formData);
-
-      if (result.success && result.otpSent) {
-        // Redirect to OTP verification page with userId
-        router.push(`/email-verify?userId=${result.userId}&role=${formData.role}`);
-    } else {
+      if (result.success) {
+        toast.success("Account created successfully", {
+          description:
+            "Your account has been created. You can now log in and start using the platform.",
+        });
+        router.push(`/dashboard`);
+      } else {
         throw new Error(result.error || "Failed to create account");
-    }
+      }
     } catch (error) {
       console.error("Signup error:", error);
+      setLoading(false);
       toast.error("Error creating account", {
-        description: "Please check your information and try again. If the problem persists, contact support.",
+        description:
+          "There was a problem creating your account. Please try again later or contact support if the issue persists.",
       });
-    } */
+    }
   };
 
   return (
@@ -90,7 +121,7 @@ export default function SignupForm() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-2">
+              <div className="space-y-2">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
                   <Input
@@ -127,8 +158,12 @@ export default function SignupForm() {
                     onChange={handleInputChange}
                   />
                 </div>
-                <Button type="submit" className="w-full">
-                  Create Account
+                <Button onClick={handleSubmit} type="submit" className="w-full">
+                  {isLoading ? (
+                    <div className="spinner"></div>
+                  ) : (
+                    "Create Account"
+                  )}
                 </Button>
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
@@ -159,12 +194,12 @@ export default function SignupForm() {
                 </Button>
 
                 <div className="text-center text-sm text-muted-foreground">
-                  Already have an account?
-                  <Link href="/login" className="text-primary hover:underline">
+                  Already have an account? 
+                  <Link href="/login" className="text-primary hover:underline ml-1">
                     Login
                   </Link>
                 </div>
-              </form>
+              </div>
             </CardContent>
           </Card>
         </div>
