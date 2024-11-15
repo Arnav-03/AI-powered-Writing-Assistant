@@ -1,7 +1,7 @@
-"use client"
 import { cn } from "@/lib/utils";
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode } from "react";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 const Layout = ({
   className,
@@ -10,33 +10,12 @@ const Layout = ({
   className?: string;
   children: ReactNode;
 }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-/*   useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const response = await fetch("/api/auth/status");
-        const { isLoggedIn } = await response.json();
-        setIsLoggedIn(isLoggedIn);
-      } catch (error) {
-        console.error("Error checking login status:", error);
-      }
-    };
-
-    checkLoginStatus();
-  }, []); */
-
   return (
-    <div
-      className={cn(
-        "w-screen flex  flex-col justify-between",
-        className
-      )}
-    >
-      {isLoggedIn ? <Navbar /> : <Navbar />}
+    <div className={cn("w-screen flex  flex-col justify-between", className)}>
+      <Navbar />
       {children}
-{/*       <Footer />
- */}    </div>
+      <Footer />
+    </div>
   );
 };
 

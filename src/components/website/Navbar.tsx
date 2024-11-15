@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   FileText,
   Settings,
+  FolderKanban,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { ModeToggle } from "../ToggleSwitch";
@@ -48,14 +49,22 @@ const Navbar = () => {
 
   const navItems = isLoggedIn
     ? [
-        { href: "/dashboard", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
-        { href: "/content", label: "Content", icon: <FileText size={20} /> },
-        { href: "/settings", label: "Settings", icon: <Settings size={20} /> },
+        {
+          href: "/dashboard",
+          label: "Dashboard",
+          icon: <LayoutDashboard size={20} />,
+        },
+        { href: "/content", label: "Content", icon: <FolderKanban  size={20} /> },
+        { href: "/profile", label: "Profile", icon: <User size={20} /> },
       ]
     : [
         { href: "/", label: "Home", icon: <Home size={20} /> },
         { href: "/about", label: "About", icon: <User size={20} /> },
-        { href: "/pricing", label: "Pricing", icon: <BadgeIndianRupee size={20} /> },
+        {
+          href: "/pricing",
+          label: "Pricing",
+          icon: <BadgeIndianRupee size={20} />,
+        },
       ];
 
   return (
