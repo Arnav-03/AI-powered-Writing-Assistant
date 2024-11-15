@@ -15,20 +15,19 @@ import {
 import { Button } from "../ui/button";
 import { ModeToggle } from "../ToggleSwitch";
 import { useRouter } from "next/navigation";
-import { getLoggedInUser } from "@/lib/appwrite";
 import { useUser } from "@/app/hooks/useUser";
 import { toast } from "sonner";
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
-  const {user,loading}=useUser();
+  const { user, loading } = useUser();
 
   useEffect(() => {
-    if(user){
+    if (user) {
       setIsLoggedIn(true);
-    }else{
+    } else {
       setIsLoggedIn(false);
     }
   }, [user]);
@@ -39,13 +38,14 @@ const Navbar: React.FC = () => {
       if (response.ok) {
         setIsLoggedIn(false);
         router.push("/login");
-        toast.success("Logout Successful")
+        toast.success("Logout Successful");
       }
     } catch (error) {
       console.error("Error signing out:", error);
-      toast.error("Error Logging out")
+      toast.error("Error Logging out");
     }
   };
+
   const navItems = isLoggedIn
     ? [
         { href: "/dashboard", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
@@ -99,60 +99,62 @@ const Navbar: React.FC = () => {
             </Button>
           </div>
 
-          {isMenuOpen && (
-            <div className="fixed inset-0 z-40 flex">
-              {/* Sidebar */}
-              <div className="w-2/3 bg-background text-primary shadow-md h-screen flex flex-col text-lg px-4 py-6">
-                <div className="flex justify-between items-center border-b-2 border-primary pb-4">
-                  <div className="text-2xl font-bold flex items-center gap-2">
-                    <WandSparkles /> WritinGenie
-                  </div>
-                  <Button onClick={() => setIsMenuOpen(false)} size="icon">
-                    <X />
-                  </Button>
+          {/* Mobile Menu with Animation */}
+          <div
+            className={`fixed inset-0 z-40 transform transition-transform bg-black/80 h-screen duration-300 ease-in-out ${
+              isMenuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+          >
+            {/* Sidebar with slide animation */}
+            <div
+              className={`absolute top-0 right-0 w-2/3 bg-background text-primary shadow-md h-screen flex flex-col text-lg px-4 py-6 transform transition-transform duration-50 ease-in-out ${
+                isMenuOpen ? "translate-x-0" : "translate-x-full"
+              }`}
+            >
+              <div className="flex justify-between items-center border-b-2 border-primary pb-4">
+                <div className="text-2xl font-bold flex items-center gap-2">
+                  <WandSparkles /> WritinGenie
                 </div>
-                <div className="flex flex-col mt-6 space-y-4">
-                  {navItems.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="flex items-center space-x-2 font-bold hover:text-primary/80 transition-colors"
-                    >
-                      {item.icon}
-                      <span>{item.label}</span>
-                    </Link>
-                  ))}
-                  {isLoggedIn ? (
-                    <Button
-                      onClick={() => {
-                        setIsLoggedIn(false);
-                        setIsMenuOpen(false);
-                        handleSignOut();
-                      }}
-                      className="mt-4"
-                    >
-                      Log Out
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => {
-                        router.push("/signup");
-                        setIsMenuOpen(false);
-                      }}
-                      className="mt-4"
-                    >
-                      Get Started
-                    </Button>
-                  )}
-                </div>
+                <Button onClick={() => setIsMenuOpen(false)} size="icon">
+                  <X />
+                </Button>
               </div>
-              {/* Blurred Background */}
-              <div
-                className="flex-1 bg-black bg-opacity-50 backdrop-blur-md"
-                onClick={() => setIsMenuOpen(false)}
-              ></div>
+              <div className="flex flex-col mt-6 space-y-4">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="flex items-center space-x-2 font-bold hover:text-primary/80 transition-colors"
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </Link>
+                ))}
+                {isLoggedIn ? (
+                  <Button
+                    onClick={() => {
+                      setIsLoggedIn(false);
+                      setIsMenuOpen(false);
+                      handleSignOut();
+                    }}
+                    className="mt-4"
+                  >
+                    Log Out
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      router.push("/signup");
+                      setIsMenuOpen(false);
+                    }}
+                    className="mt-4"
+                  >
+                    Get Started
+                  </Button>
+                )}
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </nav>
