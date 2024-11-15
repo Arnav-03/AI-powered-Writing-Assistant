@@ -93,7 +93,7 @@ export default function SignupForm() {
 
   return (
     <Layout>
-      <div className="flex flex-col lg:flex-row mt-[150px]  ">
+      <div className="flex flex-col lg:flex-row mt-[90px]  ">
         {" "}
         <div className="flex w-full  mb-4  items-center justify-center p-4 ">
           <Image
@@ -109,7 +109,7 @@ export default function SignupForm() {
             <br /> writing inspiration! &quot;
           </div>
         </div>
-        <div className="flex flex-col w-full mt-[-50px] p-4 items-center justify-center">
+        <div className="flex flex-col w-full p-4 items-center justify-center">
           <Card className="w-full max-w-md bg-background shadow-custom ">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

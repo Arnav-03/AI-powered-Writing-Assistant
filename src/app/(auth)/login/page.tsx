@@ -60,16 +60,16 @@ export default function LoginPage() {
     checkUser();
   }, [router]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLoading(true);
-
+  
     try {
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value);
       });
-
+  
       const result = await loginWithEmail(formDataToSend);
       if (result.success) {
         toast.success("Login successful", {
@@ -90,10 +90,11 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <Layout>
-      <div className="flex flex-col lg:flex-row mt-[150px]  ">
+      <div className="flex flex-col lg:flex-row mt-[100px]  ">
         <div className="flex w-full  mb-4  items-center justify-center p-4 ">
           <Image
             priority
@@ -108,7 +109,7 @@ export default function LoginPage() {
             soar! &quot;
           </div>
         </div>
-        <div className="flex flex-col w-full mt-[-50px] p-4 items-center justify-center">
+        <div className="flex flex-col w-full  p-4 items-center justify-center">
           <Card className="w-full max-w-md bg-background shadow-custom">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -120,7 +121,7 @@ export default function LoginPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <div  className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -148,7 +149,7 @@ export default function LoginPage() {
                   />
                 </div>
          
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button onClick={handleSubmit} type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? (
                     <div className="spinner"></div>
                   ) : (
@@ -190,7 +191,7 @@ export default function LoginPage() {
                     Sign up
                   </Link>
                 </div>
-              </form>
+              </div>
             </CardContent>
           </Card>
         </div>

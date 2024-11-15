@@ -1,48 +1,74 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Home,
   User,
-  Mail,
-  FolderGit2,
-  Trophy,
-  Sparkles,
-  WandSparkles,
-  Edit,
-  Tags,
   BadgeIndianRupee,
+  WandSparkles,
   Menu,
   X,
-  Router,
+  LayoutDashboard,
+  FileText,
+  Settings,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { ModeToggle } from "../ToggleSwitch";
 import { useRouter } from "next/navigation";
+import { getLoggedInUser } from "@/lib/appwrite";
+import { useUser } from "@/app/hooks/useUser";
+import { toast } from "sonner";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const router=useRouter();
-  const navItems = [
-    { href: "/", label: "Home", icon: <Home size={20} /> },
-    { href: "/about", label: "About", icon: <User size={20} /> },
-    {
-      href: "/pricing",
-      label: "Pricing",
-      icon: <BadgeIndianRupee size={20} />,
-    },
-  ];
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+  const {user,loading}=useUser();
+
+  useEffect(() => {
+    if(user){
+      setIsLoggedIn(true);
+    }else{
+      setIsLoggedIn(false);
+    }
+  }, [user]);
+
+  const handleSignOut = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", { method: "POST" });
+      if (response.ok) {
+        setIsLoggedIn(false);
+        router.push("/login");
+        toast.success("Logout Successful")
+      }
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast.error("Error Logging out")
+    }
+  };
+  const navItems = isLoggedIn
+    ? [
+        { href: "/dashboard", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
+        { href: "/content", label: "Content", icon: <FileText size={20} /> },
+        { href: "/settings", label: "Settings", icon: <Settings size={20} /> },
+      ]
+    : [
+        { href: "/", label: "Home", icon: <Home size={20} /> },
+        { href: "/about", label: "About", icon: <User size={20} /> },
+        { href: "/pricing", label: "Pricing", icon: <BadgeIndianRupee size={20} /> },
+      ];
 
   return (
-    <nav className="fixed top-0 left-0 w-full  border-b-[2px] border-primary backdrop-blur-md shadow-md z-50">
+    <nav className="fixed top-0 left-0 w-full border-b-[2px] border-primary backdrop-blur-md shadow-md z-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
-          {/* Logo */}
-          <div onClick={()=>router.push('/')} className=" cursor-pointer text-2xl font-bold flex items-center gap-2 hover:text-primary/80 transition-colors text-primary">
+          <div
+            onClick={() => router.push("/")}
+            className="cursor-pointer text-2xl font-bold flex items-center gap-2 hover:text-primary/80 transition-colors text-primary"
+          >
             <WandSparkles /> WritinGenie
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex justify-center flex-1 space-x-6 items-center">
             {navItems.map((item) => (
               <Link
@@ -55,42 +81,76 @@ const Navbar: React.FC = () => {
               </Link>
             ))}
           </div>
-          <Button onClick={()=>router.push('/signup')} className="mx-2">Get Started</Button>
+
+          {isLoggedIn ? null : (
+            <Button onClick={() => router.push("/signup")} className="mx-2">
+              Get Started
+            </Button>
+          )}
           <ModeToggle />
-          {/* Mobile Menu Toggler */}
+
           <div className="md:hidden ml-2">
             <Button
-              size='icon'
-              className="text-primary-foreground "
+              size="icon"
+              className="text-primary-foreground"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </Button>
           </div>
 
-          {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className="md:hidden fixed top-0 left-0 w-full  shadow-md z-40  h-screen text-primary bg-background  ">
-              <div className="flex justify-between border-b-2 border-primary p-4">
-                <div className="text-2xl font-bold flex items-center gap-2 hover:text-primary/80 transition-colors text-primary">
-                  <WandSparkles /> WritinGenie
+            <div className="fixed inset-0 z-40 flex">
+              {/* Sidebar */}
+              <div className="w-2/3 bg-background text-primary shadow-md h-screen flex flex-col text-lg px-4 py-6">
+                <div className="flex justify-between items-center border-b-2 border-primary pb-4">
+                  <div className="text-2xl font-bold flex items-center gap-2">
+                    <WandSparkles /> WritinGenie
+                  </div>
+                  <Button onClick={() => setIsMenuOpen(false)} size="icon">
+                    <X />
+                  </Button>
                 </div>
-                <Button onClick={() => setIsMenuOpen(false)} size="icon">
-                  <X />
-                </Button>
+                <div className="flex flex-col mt-6 space-y-4">
+                  {navItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="flex items-center space-x-2 font-bold hover:text-primary/80 transition-colors"
+                    >
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </Link>
+                  ))}
+                  {isLoggedIn ? (
+                    <Button
+                      onClick={() => {
+                        setIsLoggedIn(false);
+                        setIsMenuOpen(false);
+                        handleSignOut();
+                      }}
+                      className="mt-4"
+                    >
+                      Log Out
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        router.push("/signup");
+                        setIsMenuOpen(false);
+                      }}
+                      className="mt-4"
+                    >
+                      Get Started
+                    </Button>
+                  )}
+                </div>
               </div>
-              <div className="flex flex-col text-lg pt-20 items-center h-full">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="flex items-center space-x-2 font-bold hover:text-primary/80 transition-colors mb-4"
-                  >
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </Link>
-                ))}
-              </div>
+              {/* Blurred Background */}
+              <div
+                className="flex-1 bg-black bg-opacity-50 backdrop-blur-md"
+                onClick={() => setIsMenuOpen(false)}
+              ></div>
             </div>
           )}
         </div>
