@@ -16,7 +16,7 @@ import {
 import { Button } from "../ui/button";
 import { ModeToggle } from "../ToggleSwitch";
 import { useRouter } from "next/navigation";
-import { useUser } from "@/app/hooks/useUser";
+import { useUser } from "@/app/hooks/UserContext";
 import { toast } from "sonner";
 
 const Navbar = () => {

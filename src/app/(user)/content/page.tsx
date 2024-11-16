@@ -27,6 +27,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Layout from '@/components/website/Layout';
+import NewProjectButton from '@/components/website/NewProjectButton';
 
 const ContentManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -69,7 +70,7 @@ const ContentManagement = () => {
     <Layout>
     <div className="p-8 max-w-7xl mx-auto mt-[90px]">
       {/* Header Section */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold">Content Management</h1>
           <p className="text-muted-foreground mt-2">
@@ -78,10 +79,7 @@ const ContentManagement = () => {
         </div>
         <Dialog open={isNewContentDialogOpen} onOpenChange={setIsNewContentDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="gap-2">
-              <PlusCircle className="w-4 h-4" />
-              New Content
-            </Button>
+            <NewProjectButton/>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>

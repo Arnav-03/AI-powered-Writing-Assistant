@@ -8,13 +8,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Layout from "@/components/website/Layout";
-import { useUser } from "@/app/hooks/useUser";
+import { useUser } from "@/app/hooks/UserContext";
 import { useTheme } from "next-themes";
 
 const SettingsPage = () => {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
-  const { user, loading } = useUser();
+  const { user,setUser, loading } = useUser();
   const { theme, setTheme } = useTheme();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -29,6 +29,7 @@ const SettingsPage = () => {
       if (response.ok) {
         router.push("/login");
         toast.success("Logged out successfully");
+        setUser(null);
       }
     } catch (error) {
       toast.error("Error logging out");
