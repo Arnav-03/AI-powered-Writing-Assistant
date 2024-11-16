@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { User, LogOut, Moon, Sun, Mail, Edit2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,11 +14,15 @@ import { useTheme } from "next-themes";
 const SettingsPage = () => {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const { user, loading } = useUser();
-
   const { theme, setTheme } = useTheme();
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Initialize isDarkMode based on theme
+  useEffect(() => {
+    setIsDarkMode(theme === "dark");
+  }, [theme]);
+    
   const handleLogout = async () => {
     try {
       const response = await fetch("/api/auth/logout", { method: "POST" });
@@ -33,7 +37,7 @@ const SettingsPage = () => {
 
   return (
     <Layout>
-      <div className=" bg-background py-8 px-4 sm:px-6 lg:px-8 mt-[90px]">
+      <div className="bg-background py-8 px-4 sm:px-6 lg:px-8 mt-[90px]">
         <div className="max-w-2xl mx-auto">
           <Card>
             <CardContent className="p-6">
