@@ -57,13 +57,13 @@ const NewProject = () => {
   };
 
   const handleKeywordAdd = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && projectData.currentKeyword.trim()) {
+   /*  if (e.key === 'Enter' && projectData.currentKeyword.trim()) {
       setProjectData({
         ...projectData,
         keywords: [...projectData.keywords, projectData.currentKeyword.trim()],
         currentKeyword: ''
       });
-    }
+    } */
   };
 
   const removeKeyword = (keyword: string) => {
