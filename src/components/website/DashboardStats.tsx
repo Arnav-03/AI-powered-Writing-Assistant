@@ -1,9 +1,11 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  BookOpen,
   Briefcase,
   Feather,
   FilePen,
+  FileText,
   Globe,
   Layers,
   NotebookPen,
@@ -20,9 +22,9 @@ const DashboardStats = () => {
            "
           >
             <div className="flex ">
-              <NotebookPen className="h-10 w-10 lg:h-14 lg:w-14 text-primary mr-2" />
+              <FileText className="h-10 w-10 lg:h-14 lg:w-14 text-primary mr-2" />
               <div className="text-gray-500 uppercase">
-                <div className="text-sm lg:text-lg">Total</div>
+                <div className="text-sm lg:text-lg font-extralight">Total</div>
                 <div className="font-extrabold text-md lg:text-xl  text-foreground/80">
                   Blogs
                 </div>
@@ -39,7 +41,7 @@ const DashboardStats = () => {
            "
           >
             <div className="flex ">
-              <Feather className="h-10 w-10 lg:h-14 lg:w-14 text-primary mr-2" />
+              <BookOpen className="h-10 w-10 lg:h-14 lg:w-14 text-primary mr-2" />
               <div className="text-gray-500 uppercase">
               <div className="text-sm lg:text-lg">Total</div>
               <div className="font-extrabold text-md lg:text-xl  text-foreground/80">

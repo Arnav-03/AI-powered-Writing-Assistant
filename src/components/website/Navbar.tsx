@@ -54,7 +54,7 @@ const Navbar = () => {
           label: "Dashboard",
           icon: <LayoutDashboard size={20} />,
         },
-        { href: "/content", label: "Content", icon: <FolderKanban  size={20} /> },
+        { href: "/content", label: "Content Management", icon: <FolderKanban  size={20} /> },
         { href: "/profile", label: "Profile", icon: <User size={20} /> },
       ]
     : [

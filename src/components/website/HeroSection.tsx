@@ -11,7 +11,7 @@ export default function HeroSection() {
       <div className="container px-4 md:px-6 flex md:flex-row items-center justify-center">
         <div className="flex flex-col items-center space-y-4 text-center w-2/3">
           <div className="space-y-2 lg:w-4/5 tracking-wide">
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl xl:7xl text-start md:text-start">
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl xl:7xl text-start md:text-start">
               <span className="text-primary font-extrabold">
                 WritinGenie: <br />
               </span>
@@ -22,7 +22,7 @@ export default function HeroSection() {
               </span>
               and <span className="text-primary font-extrabold  ">Blogs</span>
             </h1>
-            <p className="mx-auto  text-gray-500 text-lg md:text-xl dark:text-gray-400 text-start ">
+            <p className="mx-auto  text-gray-500 text-xl md:text-xl dark:text-gray-400 text-start ">
               Speed up your writing process with AI-powered tools that refine,
               edit, and enhance your work.
             </p>
@@ -41,7 +41,7 @@ export default function HeroSection() {
             <div className="dark:shine-effect"></div>
             <Image
               priority
-              height={400}
+              height={450}
               src={genie}
               alt="genie"
               className="floating genie-image"
