@@ -1,26 +1,9 @@
-"use client"
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { 
-  FileText, 
-  BookOpen, 
-  PenTool, 
-  MessageSquare, 
-  Target, 
-  Sparkles, 
-  ArrowLeft,
-  Wand2
-} from 'lucide-react';
+"use client";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { FileText, BookOpen, Sparkles, Wand2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Card,
   CardContent,
@@ -29,83 +12,123 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import Layout from '@/components/website/Layout';
+import Layout from "@/components/website/Layout";
+import CreatingProject from "@/components/website/CreatingProject";
 
-const NewProject = () => {
+interface ProjectData {
+  title: string;
+  type: string;
+  description: string;
+  tone: string;
+  style: string;
+  creativityLevel: number;
+  keywords: string[];
+  currentKeyword: string;
+}
+
+const initialProjectData: ProjectData = {
+  title: "",
+  type: "",
+  description: "",
+  tone: "",
+  style: "",
+  creativityLevel: 50,
+  keywords: [],
+  currentKeyword: "",
+};
+
+const NewProject: React.FC = () => {
   const router = useRouter();
-  const [step, setStep] = useState(1);
-  const [projectData, setProjectData] = useState({
-    title: '',
-    type: '',
-    description: '',
-    tone: '',
-    audience: '',
-    style: '',
-    creativityLevel: 50,
-    keywords: [],
-    currentKeyword: ''
-  });
+  const [step, setStep] = useState<number>(1);
+  const [isGeneratingTitles, setIsGeneratingTitles] = useState<boolean>(false);
+  const [suggestedTitles, setSuggestedTitles] = useState<string[]>([]);
+  const [projectData, setProjectData] =
+    useState<ProjectData>(initialProjectData);
 
-  const handleBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    } else {
-      router.back();
-    }
+  const handleGenerateTitles = (): void => {
+    setIsGeneratingTitles(true);
+    // Simulated API call for title generation
+    setTimeout(() => {
+      setSuggestedTitles([
+        "The Ultimate Guide to Modern Development",
+        "10 Revolutionary Approaches to Software Design",
+        "Breaking Down Complex Systems: A Developer's Journey",
+        "Innovation in Practice: Real-world Case Studies",
+      ]);
+      setIsGeneratingTitles(false);
+    }, 1500);
   };
 
-  const handleKeywordAdd = (e: React.KeyboardEvent) => {
-   /*  if (e.key === 'Enter' && projectData.currentKeyword.trim()) {
+  const handleKeywordAdd = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === "Enter" && projectData.currentKeyword.trim()) {
       setProjectData({
         ...projectData,
         keywords: [...projectData.keywords, projectData.currentKeyword.trim()],
-        currentKeyword: ''
+        currentKeyword: "",
       });
-    } */
+    }
   };
 
-  const removeKeyword = (keyword: string) => {
+  const removeKeyword = (keyword: string): void => {
     setProjectData({
       ...projectData,
-      keywords: projectData.keywords.filter(k => k !== keyword)
+      keywords: projectData.keywords.filter((k) => k !== keyword),
     });
   };
 
-  const renderStep = () => {
+  const renderStep = (): JSX.Element => {
     switch (step) {
       case 1:
         return (
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <Card 
-                className={`cursor-pointer transition-all hover:border-primary ${
-                  projectData.type === 'blog' ? 'border-primary' : ''
+          <div className="space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card
+                className={`cursor-pointer transition-all hover:scale-105 duration-200 ${
+                  projectData.type === "blog" ? "ring-2 ring-primary" : ""
                 }`}
-                onClick={() => setProjectData({ ...projectData, type: 'blog' })}
+                onClick={() => setProjectData({ ...projectData, type: "blog" })}
               >
-                <CardContent className="p-6 flex flex-col items-center justify-center space-y-2">
-                  <FileText className="w-8 h-8 text-primary" />
-                  <h3 className="font-semibold">Blog Post</h3>
-                  <p className="text-sm text-muted-foreground text-center">
-                    Perfect for articles, tutorials, and thought leadership
-                  </p>
+                <CardContent className="p-8 pb-2">
+                  <div className="flex flex-col items-center space-y-1">
+                    <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center">
+                      <FileText className="w-8 h-8 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-semibold">Blog Post</h3>
+                    <p className="text-sm text-muted-foreground text-center">
+                      Perfect for articles, tutorials, and thought leadership
+                    </p>
+                    {projectData.type === "blog" && (
+                      <Badge className="bg-primary/10 text-primary">
+                        Selected
+                      </Badge>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
-
-              <Card 
-                className={`cursor-pointer transition-all hover:border-primary ${
-                  projectData.type === 'essay' ? 'border-primary' : ''
+              <Card
+                className={`cursor-pointer transition-all hover:scale-105 duration-200 ${
+                  projectData.type === "essay" ? "ring-2 ring-primary" : ""
                 }`}
-                onClick={() => setProjectData({ ...projectData, type: 'essay' })}
+                onClick={() =>
+                  setProjectData({ ...projectData, type: "essay" })
+                }
               >
-                <CardContent className="p-6 flex flex-col items-center justify-center space-y-2">
-                  <BookOpen className="w-8 h-8 text-primary" />
-                  <h3 className="font-semibold">Essay</h3>
-                  <p className="text-sm text-muted-foreground text-center">
-                    Ideal for academic writing and in-depth analysis
-                  </p>
+                <CardContent className="p-8 pb-2">
+                  <div className="flex flex-col items-center space-y-1">
+                    <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center">
+                      <BookOpen className="w-8 h-8 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-semibold">Essay</h3>
+                    <p className="text-sm text-muted-foreground text-center">
+                      Ideal for academic writing and in-depth analysis
+                    </p>
+                    {projectData.type === "essay" && (
+                      <Badge className="bg-primary/10 text-primary">
+                        Selected
+                      </Badge>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -118,23 +141,48 @@ const NewProject = () => {
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="title">Project Title</Label>
-                <Input
-                  id="title"
-                  placeholder="Enter your project title"
-                  value={projectData.title}
-                  onChange={(e) => setProjectData({ ...projectData, title: e.target.value })}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">Project Description</Label>
-                <Textarea
-                  id="description"
-                  placeholder="What would you like to write about?"
-                  className="h-32"
-                  value={projectData.description}
-                  onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
-                />
+                <div className="flex gap-2">
+                  <Input
+                    id="title"
+                    placeholder="Enter your project title"
+                    value={projectData.title}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setProjectData({ ...projectData, title: e.target.value })
+                    }
+                    className="flex-1"
+                  />
+                  <Button
+                    variant="secondary"
+                    onClick={handleGenerateTitles}
+                    disabled={isGeneratingTitles}
+                  >
+                    {isGeneratingTitles ? (
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-4 h-4 mr-2" />
+                    )}
+                    Generate Ideas
+                  </Button>
+                </div>
+                {suggestedTitles.length > 0 && (
+                  <div className="mt-4 space-y-2">
+                    <Label>Suggested Titles</Label>
+                    <div className="grid grid-cols-1 gap-2">
+                      {suggestedTitles.map((title, index) => (
+                        <Button
+                          key={index}
+                          variant="ghost"
+                          className="justify-start h-auto py-2 px-4 text-left"
+                          onClick={() =>
+                            setProjectData({ ...projectData, title })
+                          }
+                        >
+                          {title}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -143,78 +191,27 @@ const NewProject = () => {
       case 3:
         return (
           <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="tone">Writing Tone</Label>
-                <Select 
-                  value={projectData.tone}
-                  onValueChange={(value) => setProjectData({ ...projectData, tone: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select tone" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="professional">Professional</SelectItem>
-                    <SelectItem value="casual">Casual</SelectItem>
-                    <SelectItem value="academic">Academic</SelectItem>
-                    <SelectItem value="conversational">Conversational</SelectItem>
-                    <SelectItem value="humorous">Humorous</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="style">Writing Style</Label>
-                <Select 
-                  value={projectData.style}
-                  onValueChange={(value) => setProjectData({ ...projectData, style: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select style" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="narrative">Narrative</SelectItem>
-                    <SelectItem value="descriptive">Descriptive</SelectItem>
-                    <SelectItem value="analytical">Analytical</SelectItem>
-                    <SelectItem value="persuasive">Persuasive</SelectItem>
-                    <SelectItem value="expository">Expository</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>AI Creativity Level</Label>
-              <div className="pt-2">
-                <Slider
-                  value={[projectData.creativityLevel]}
-                  onValueChange={(value: any[]) => setProjectData({ ...projectData, creativityLevel: value[0] })}
-                  max={100}
-                  step={1}
-                />
-              </div>
-              <div className="flex justify-between text-sm text-muted-foreground pt-1">
-                <span>Conservative</span>
-                <span>Balanced</span>
-                <span>Creative</span>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="keywords">Keywords</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            <div className="space-y-2 pt-4">
+              <Label htmlFor="keywords">Keywords (Optional)</Label>
               <Input
                 id="keywords"
                 placeholder="Press Enter to add keywords"
                 value={projectData.currentKeyword}
-                onChange={(e) => setProjectData({ ...projectData, currentKeyword: e.target.value })}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setProjectData({
+                    ...projectData,
+                    currentKeyword: e.target.value,
+                  })
+                }
                 onKeyDown={handleKeywordAdd}
               />
               <div className="flex flex-wrap gap-2 pt-2">
                 {projectData.keywords.map((keyword) => (
-                  <Badge 
+                  <Badge
                     key={keyword}
                     variant="secondary"
-                    className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground"
+                    className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground transition-colors"
                     onClick={() => removeKeyword(keyword)}
                   >
                     {keyword} ×
@@ -224,82 +221,83 @@ const NewProject = () => {
             </div>
           </div>
         );
+
+      default:
+        return <div />;
     }
   };
-
-  const handleNext = () => {
+  const [showCreatinProject, setShowCreatinProject] = useState(false);
+  const handleNext = (): void => {
     if (step < 3) {
       setStep(step + 1);
     } else {
-      // Handle project creation
-      console.log('Creating project:', projectData);
-      router.push('/editor'); // Redirect to editor with the new project
+      setShowCreatinProject(true);
+      console.log("Creating project:", projectData);
+      router.push("/editor");
     }
   };
 
   return (
     <Layout>
-    <div className="min-h-screen bg-background p-8 mt-[70px]">
-      <div className="max-w-3xl mx-auto">
-        <Button 
-          variant="ghost" 
-          className="mb-6"
-          onClick={handleBack}
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Button>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Wand2 className="w-6 h-6" />
-              Create New Project
-            </CardTitle>
-            <CardDescription>
-              Set up your writing project and let AI assist you in crafting amazing content
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {/* Progress Steps */}
-            <div className="flex items-center justify-between mb-8">
-              {[1, 2, 3].map((stepNumber) => (
-                <div
-                  key={stepNumber}
-                  className="flex items-center"
-                >
-                  <div 
-                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      stepNumber <= step ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
-                    }`}
-                  >
-                    {stepNumber}
-                  </div>
-                  {stepNumber < 3 && (
-                    <div 
-                      className={`h-1 w-24 mx-2 ${
-                        stepNumber < step ? 'bg-primary' : 'bg-muted'
-                      }`}
-                    />
-                  )}
+      {!showCreatinProject ? (
+        <div className="min-h-screen bg-background p-4 md:p-8 mt-[70px]">
+          <div className="max-w-3xl mx-auto">
+            <Card className="border-2">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-2xl">
+                  <Wand2 className="w-7 h-7" />
+                  Create New Project
+                </CardTitle>
+                <CardDescription className="text-base">
+                  Set up your writing project and let AI assist you in crafting
+                  amazing content
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center   justify-center mb-8">
+                  {[1, 2, 3].map((stepNumber) => (
+                    <div
+                      key={stepNumber}
+                      className="flex items-center w-full  "
+                    >
+                      <div
+                        className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center transition-colors duration-200 ${
+                          stepNumber <= step
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                      >
+                        {stepNumber}
+                      </div>
+                      {stepNumber < 3 && (
+                        <div
+                          className={`h-1 w-full   mx-2 transition-colors duration-200 ${
+                            stepNumber < step ? "bg-primary" : "bg-muted"
+                          }`}
+                        />
+                      )}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            {renderStep()}
+                {renderStep()}
 
-            <div className="mt-8 flex justify-end">
-              <Button 
-                onClick={handleNext}
-                className="w-32"
-              >
-                {step === 3 ? 'Create' : 'Next'}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+                <div className="mt-8 flex justify-end">
+                  <Button
+                    onClick={handleNext}
+                    className="w-32 h-11"
+                    disabled={step === 1 && !projectData.type}
+                  >
+                    {step === 3 ? "Create" : "Next"}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      ) : (
+        <CreatingProject />
+      )}
     </Layout>
   );
 };
