@@ -106,3 +106,45 @@ export async function logout() {
         return { success: false, error: 'Error during logout' };
     }
 }
+
+
+export async function createProjectinDb(type: string, title: string, keywords: Array<string>) {
+  console.log("data==>", title, type, keywords);
+  try {
+    // Fetch logged-in user's details
+    const loggedInUser = await getLoggedInUser();
+    if (!loggedInUser) {
+      return { success: false, error: "User not logged in" };
+    }
+
+    const { email } = loggedInUser;
+    const { account } = await createAdminClient();
+    const databases = new Databases(account.client);
+    const projectId = ID.unique();
+    const keywordsString = keywords.join(' ');
+    const now = new Date();
+    const formattedDate = `${now.getDate().toString().padStart(2, '0')}-${(now.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${now.getFullYear()}`;
+
+    const response = await databases.createDocument(
+      process.env.APPWRITE_DATABASE!,
+      process.env.PROJECT_EMAIL_COLLECTION!,
+      ID.unique(),
+      {
+        email: email,
+        projectId: projectId,
+        title: title,
+        type: type,
+        keywords: keywordsString,
+        time: formattedDate,
+      }
+    );
+
+    return { success: true, response };
+  } catch (error) {
+    console.error("Error creating project:", error);
+    return { success: false, error: error || "Error creating project" };
+  }
+}
+

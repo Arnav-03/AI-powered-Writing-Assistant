@@ -15,14 +15,13 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/website/Layout";
 import CreatingProject from "@/components/website/CreatingProject";
+import { useUser } from "@/app/hooks/UserContext";
+import { createProjectinDb } from "@/lib/appwrite";
+import { title } from "process";
 
 interface ProjectData {
   title: string;
   type: string;
-  description: string;
-  tone: string;
-  style: string;
-  creativityLevel: number;
   keywords: string[];
   currentKeyword: string;
 }
@@ -30,10 +29,6 @@ interface ProjectData {
 const initialProjectData: ProjectData = {
   title: "",
   type: "",
-  description: "",
-  tone: "",
-  style: "",
-  creativityLevel: 50,
   keywords: [],
   currentKeyword: "",
 };
@@ -45,6 +40,7 @@ const NewProject: React.FC = () => {
   const [suggestedTitles, setSuggestedTitles] = useState<string[]>([]);
   const [projectData, setProjectData] =
     useState<ProjectData>(initialProjectData);
+  const [showCreatinProject, setShowCreatinProject] = useState(false);
 
   const handleGenerateTitles = (): void => {
     setIsGeneratingTitles(true);
@@ -226,14 +222,21 @@ const NewProject: React.FC = () => {
         return <div />;
     }
   };
-  const [showCreatinProject, setShowCreatinProject] = useState(false);
+
+  const createProject = async () => {
+    const response = await createProjectinDb(
+      projectData.title,
+      projectData.type,
+      projectData.keywords
+    );
+    console.log("response is =>",response)
+  };
   const handleNext = (): void => {
     if (step < 3) {
       setStep(step + 1);
     } else {
       setShowCreatinProject(true);
-      console.log("Creating project:", projectData);
-      router.push("/editor");
+      createProject();
     }
   };
 
