@@ -23,7 +23,7 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
   const [selectedText, setSelectedText] = useState("");
   const [currentTool, setCurrentTool] = useState("");
   const [resultDialog, setResultDialog] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const handleToolSelect = async (toolId: string, selectedText: string) => {
     console.log("Selected Tool:", toolId);
     console.log("Selected Text:", selectedText);
@@ -31,11 +31,33 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
     // You can add specific logic for each tool here
     switch (toolId) {
       case "generate":
-        console.log("generating:", selectedText);
+       /*  console.log("generating:", selectedText);
         const generatedContent = await generateFromGemini(title, type);
         console.log(generatedContent);
         setResponse(generatedContent); // Store the generated response
-        break;
+        break; */
+        try {
+            console.log("Generating:", title);
+            const res = await fetch("/api/gemini", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ topic: title, type }),
+            });
+      
+            if (res.ok) {
+              const data = await res.json();
+              setResponse(data.content);
+            } else {
+              const errorData = await res.json();
+              console.error("Error:", errorData.error);
+              setResponse("Error generating content. Try again.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            setResponse("An unexpected error occurred.");
+          } finally {
+            setLoading(false);
+          }
       case "rephrase":
         console.log("Rephrasing:", selectedText);
         break;
