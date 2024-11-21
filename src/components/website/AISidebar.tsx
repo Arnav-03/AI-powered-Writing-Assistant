@@ -31,19 +31,49 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
     // You can add specific logic for each tool here
     switch (toolId) {
       case "generate":
-       /*  console.log("generating:", selectedText);
+        /*  console.log("generating:", selectedText);
         const generatedContent = await generateFromGemini(title, type);
         console.log(generatedContent);
         setResponse(generatedContent); // Store the generated response
         break; */
         try {
-            console.log("Generating:", title);
-            const res = await fetch("/api/gemini", {
+          console.log("Generating:", title);
+          const res = await fetch("/api/gemini/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ topic: title, type }),
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            setResponse(data.content);
+          } else {
+            const errorData = await res.json();
+            console.error("Error:", errorData.error);
+            setResponse("Error generating content. Try again.");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          setResponse("An unexpected error occurred.");
+        } finally {
+          setLoading(false);
+        }
+        break;
+      case "rephrase":
+        console.log("Rephrasing:", selectedText);
+        break;
+      case "translate":
+        console.log("Translating:", selectedText);
+        break;
+      case "tone":
+        try {
+            console.log("Adjusting tone for:", selectedText,style);
+            const res = await fetch("/api/gemini/style", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ topic: title, type }),
+              body: JSON.stringify({ selectedText, style }),
             });
-      
+  
             if (res.ok) {
               const data = await res.json();
               setResponse(data.content);
@@ -58,14 +88,6 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
           } finally {
             setLoading(false);
           }
-      case "rephrase":
-        console.log("Rephrasing:", selectedText);
-        break;
-      case "translate":
-        console.log("Translating:", selectedText);
-        break;
-      case "tone":
-        console.log("Adjusting tone for:", selectedText);
         break;
       // ... handle other tools
     }
@@ -87,6 +109,7 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
     setDialogOpen(false); // Close the current dialog box
     setResultDialog(true);
   };
+  const [style, setStyle] = useState(""); // State to store the user's input for style
 
   const handleCopyResponse = () => {
     if (response) {
@@ -151,7 +174,21 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
       content: (
         <div>
           <p className="text-sm mb-2">Selected Text:</p>
-          <Textarea readOnly value={selectedText} className="h-[100px]" />
+          <Textarea readOnly value={selectedText} className="h-[100px] mb-4" />
+          <label htmlFor="tone-style" className="text-sm mb-2 block">
+            Choose a style:
+          </label>
+          <input
+            id="tone-style"
+            type="text"
+            placeholder="e.g., Formal, Casual"
+            value={style}
+            onChange={(e) => setStyle(e.target.value)}
+            className="w-full border rounded p-2 text-sm"
+          />
+          <p className="text-xs mt-2">
+            Selected Style: <strong>{style}</strong>
+          </p>
         </div>
       ),
     },
@@ -186,7 +223,8 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
         (response ? (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
             <div className="bg-white rounded-lg shadow-lg p-4 w-96">
-              <h2 className="text-lg font-bold mb-4">Genie is thinking...</h2>
+              {/*               <h2 className="text-lg font-bold mb-4">Genie is thinking...</h2>
+               */}{" "}
               <div className="mb-4">
                 <Textarea readOnly value={response} className="h-[200px] " />
               </div>
@@ -210,7 +248,9 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
             <div className="bg-white rounded-lg shadow-lg p-4 w-96">
               <div className="space-y-4">
-                <div className="h-[200px] bg-gray-200 animate-pulse rounded-md"></div>
+                <div className="h-[200px] flex items-center justify-center bg-gray-200 animate-pulse rounded-md">
+                    thinking...
+                </div>
               </div>
             </div>
           </div>
