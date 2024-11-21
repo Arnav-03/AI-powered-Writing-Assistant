@@ -166,16 +166,19 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
             <div className="bg-white rounded-lg shadow-lg p-4 w-96">
               <h2 className="text-lg font-bold mb-4">Genie is thinking...</h2>
               <div className="mb-4">
-                <Textarea readOnly value={response} className="h-[200px]" />
+                <Textarea readOnly value={response} className="h-[200px] " />
               </div>
               <div className="flex justify-end space-x-2 my-4">
                 <Button variant="default" onClick={handleCopyResponse}>
                   Copy
                 </Button>
-                <Button variant="outline" onClick={() => {
+                <Button
+                  variant="outline"
+                  onClick={() => {
                     setResponse(null);
                     setResultDialog(false);
-                }}>
+                  }}
+                >
                   Close
                 </Button>
               </div>
@@ -184,7 +187,6 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
         ) : (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
             <div className="bg-white rounded-lg shadow-lg p-4 w-96">
-              <h2 className="text-lg font-bold mb-4">Generating Content...</h2>
               <div className="space-y-4">
                 <div className="h-[200px] bg-gray-200 animate-pulse rounded-md"></div>
               </div>
