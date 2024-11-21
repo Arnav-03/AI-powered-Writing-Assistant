@@ -230,6 +230,9 @@ const NewProject: React.FC = () => {
       projectData.keywords
     );
     console.log("response is =>",response)
+    if(response.success){
+      router.push(`/project/${response.response?.$id}`)
+    }
   };
   const handleNext = (): void => {
     if (step < 3) {

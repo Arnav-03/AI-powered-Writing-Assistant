@@ -148,3 +148,21 @@ export async function createProjectinDb(type: string, title: string, keywords: A
   }
 }
 
+export async function getProjectDetailsById(projectId: string) {
+  try {
+    console.log("project is ",projectId)
+    const { account } = await createAdminClient();
+    const databases = new Databases(account.client);
+
+    const response = await databases.getDocument(
+      process.env.APPWRITE_DATABASE!, // Database ID
+      process.env.PROJECT_EMAIL_COLLECTION!, // Collection ID
+      projectId // Document ID
+    );
+
+    return { success: true, data: response };
+  } catch (error) {
+    console.error("Error fetching project details:", error);
+    return { success: false, error: error || "Error fetching project details" };
+  }
+}
