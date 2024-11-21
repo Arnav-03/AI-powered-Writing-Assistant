@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollText, PenTool, ListTree, Sparkles, Palette } from "lucide-react";
 import { toast } from "sonner";
 import { Textarea } from "../ui/textarea";
-import { generateFromGemini } from "@/lib/Gemini";
-import { Skeleton } from "../ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import genie from "../../../public/loading.png"
+import Image from "next/image";
 
 interface AISidebarProps {
   title: string;
@@ -24,97 +25,133 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
   const [currentTool, setCurrentTool] = useState("");
   const [resultDialog, setResultDialog] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [style, setStyle] = useState(""); 
+  const [rephraseMode, setRephraseMode] = useState("academic");
+  const [targetLanguage, setTargetLanguage] = useState("spanish");
+
   const handleToolSelect = async (toolId: string, selectedText: string) => {
+    setLoading(true);
     console.log("Selected Tool:", toolId);
     console.log("Selected Text:", selectedText);
 
-    // You can add specific logic for each tool here
-    switch (toolId) {
-      case "generate":
-        /*  console.log("generating:", selectedText);
-        const generatedContent = await generateFromGemini(title, type);
-        console.log(generatedContent);
-        setResponse(generatedContent); // Store the generated response
-        break; */
-        try {
-          console.log("Generating:", title);
-          const res = await fetch("/api/gemini/generate", {
+    try {
+      switch (toolId) {
+        case "generate":
+          const generateRes = await fetch("/api/gemini/generate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ topic: title, type }),
           });
 
-          if (res.ok) {
-            const data = await res.json();
+          if (generateRes.ok) {
+            const data = await generateRes.json();
             setResponse(data.content);
           } else {
-            const errorData = await res.json();
+            const errorData = await generateRes.json();
             console.error("Error:", errorData.error);
             setResponse("Error generating content. Try again.");
           }
-        } catch (error) {
-          console.error("Error:", error);
-          setResponse("An unexpected error occurred.");
-        } finally {
-          setLoading(false);
-        }
-        break;
-      case "rephrase":
-        console.log("Rephrasing:", selectedText);
-        break;
-      case "translate":
-        console.log("Translating:", selectedText);
-        break;
-      case "tone":
-        try {
-            console.log("Adjusting tone for:", selectedText,style);
-            const res = await fetch("/api/gemini/style", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ selectedText, style }),
-            });
-  
-            if (res.ok) {
-              const data = await res.json();
-              setResponse(data.content);
-            } else {
-              const errorData = await res.json();
-              console.error("Error:", errorData.error);
-              setResponse("Error generating content. Try again.");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            setResponse("An unexpected error occurred.");
-          } finally {
-            setLoading(false);
+          break;
+
+        case "rephrase":
+          const rephraseRes = await fetch("/api/gemini/rephrase", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              text: selectedText, 
+              mode: rephraseMode 
+            }),
+          });
+
+          if (rephraseRes.ok) {
+            const data = await rephraseRes.json();
+            setResponse(data.rephrased);
+          } else {
+            const errorData = await rephraseRes.json();
+            console.error("Error:", errorData.error);
+            setResponse("Error rephrasing content. Try again.");
           }
-        break;
-      // ... handle other tools
-    }
-  };
+          break;
 
-  const handleToolClick = (toolId: string) => {
-    const text = window.getSelection()?.toString() || "";
-    if (text.length === 0 && toolId !== "generate" && toolId !== "outline") {
-      toast.error("Please select text to use this tool.");
-      return;
-    }
-    setSelectedText(text);
-    setCurrentTool(toolId);
-    setDialogOpen(true);
-  };
+        case "restructure":
+          const restructureRes = await fetch("/api/gemini/restructure", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: selectedText }),
+          });
 
-  const handleGenerateClick = () => {
-    handleToolSelect(currentTool, selectedText);
-    setDialogOpen(false); // Close the current dialog box
-    setResultDialog(true);
-  };
-  const [style, setStyle] = useState(""); // State to store the user's input for style
+          if (restructureRes.ok) {
+            const data = await restructureRes.json();
+            setResponse(data.restructured);
+          } else {
+            const errorData = await restructureRes.json();
+            console.error("Error:", errorData.error);
+            setResponse("Error restructuring content. Try again.");
+          }
+          break;
 
-  const handleCopyResponse = () => {
-    if (response) {
-      navigator.clipboard.writeText(response);
-      toast.success("Content copied to clipboard!");
+        case "translate":
+          const translateRes = await fetch("/api/gemini/translate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              text: selectedText, 
+              targetLanguage 
+            }),
+          });
+
+          if (translateRes.ok) {
+            const data = await translateRes.json();
+            setResponse(data.translated);
+          } else {
+            const errorData = await translateRes.json();
+            console.error("Error:", errorData.error);
+            setResponse("Error translating content. Try again.");
+          }
+          break;
+
+        case "tone":
+          const toneRes = await fetch("/api/gemini/style", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              selectedText, 
+              style 
+            }),
+          });
+
+          if (toneRes.ok) {
+            const data = await toneRes.json();
+            setResponse(data.content);
+          } else {
+            const errorData = await toneRes.json();
+            console.error("Error:", errorData.error);
+            setResponse("Error adjusting tone. Try again.");
+          }
+          break;
+
+        case "outline":
+          const outlineRes = await fetch("/api/gemini/outline", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ topic: title }),
+          });
+
+          if (outlineRes.ok) {
+            const data = await outlineRes.json();
+            setResponse(data.outline);
+          } else {
+            const errorData = await outlineRes.json();
+            console.error("Error:", errorData.error);
+            setResponse("Error generating outline. Try again.");
+          }
+          break;
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setResponse("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -162,7 +199,49 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
       content: (
         <div>
           <p className="text-sm mb-2">Selected Text:</p>
-          <Textarea readOnly value={selectedText} className="h-[100px]" />
+          <Textarea readOnly value={selectedText} className="h-[100px] mb-4" />
+          <label className="text-sm mb-2 block">Choose Rephrasing Mode:</label>
+          <Select 
+            value={rephraseMode} 
+            onValueChange={setRephraseMode}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Rephrasing Mode" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="academic">Academic</SelectItem>
+              <SelectItem value="casual">Casual</SelectItem>
+              <SelectItem value="creative">Creative</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      ),
+    },
+    {
+      id: "translate",
+      title: "Translate Content",
+      description: "Translate to different languages",
+      icon: Palette,
+      content: (
+        <div>
+          <p className="text-sm mb-2">Selected Text:</p>
+          <Textarea readOnly value={selectedText} className="h-[100px] mb-4" />
+          <label className="text-sm mb-2 block">Choose Target Language:</label>
+          <Select 
+            value={targetLanguage} 
+            onValueChange={setTargetLanguage}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Language" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="spanish">Spanish</SelectItem>
+              <SelectItem value="french">French</SelectItem>
+              <SelectItem value="german">German</SelectItem>
+              <SelectItem value="chinese">Chinese</SelectItem>
+              <SelectItem value="arabic">Arabic</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       ),
     },
@@ -194,6 +273,30 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
     },
   ];
 
+
+  const handleToolClick = (toolId: string) => {
+    const text = window.getSelection()?.toString() || "";
+    if (text.length === 0 && toolId !== "generate" && toolId !== "outline") {
+      toast.error("Please select text to use this tool.");
+      return;
+    }
+    setSelectedText(text);
+    setCurrentTool(toolId);
+    setDialogOpen(true);
+  };
+
+  const handleGenerateClick = () => {
+    handleToolSelect(currentTool, selectedText);
+    setDialogOpen(false); // Close the current dialog box
+    setResultDialog(true);
+  };
+
+  const handleCopyResponse = () => {
+    if (response) {
+      navigator.clipboard.writeText(response);
+      toast.success("Content copied to clipboard!");
+    }
+  };
   return (
     <div>
       {/* Custom Dialog Box for Tools */}
@@ -249,7 +352,14 @@ const AIAssistantSidebar: React.FC<AISidebarProps> = ({
             <div className="bg-white rounded-lg shadow-lg p-4 w-96">
               <div className="space-y-4">
                 <div className="h-[200px] flex items-center justify-center bg-gray-200 animate-pulse rounded-md">
-                    thinking...
+                  <Image
+                    priority
+                    height={100}
+                    src={genie}
+                    alt="genie"
+                    className="floating genie-image"
+                  />
+                  <div className="loader mt-[-30px] ml-[-75px] h-[75px]"></div>
                 </div>
               </div>
             </div>
